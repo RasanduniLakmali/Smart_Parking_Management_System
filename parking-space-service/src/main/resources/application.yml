@@ -1,0 +1,22 @@
+server:
+  port: 8083
+  servlet:
+    context-path: /parking-service
+
+
+#  8083/parking-service/api/v1
+
+
+spring:
+  application:
+    name: parking-service
+
+
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:8761/eureka/
+
+
+

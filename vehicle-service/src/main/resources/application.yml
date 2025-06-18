@@ -1,0 +1,15 @@
+server:
+  port: 8082
+  servlet:
+    context-path: /vehicle-service
+
+
+#  8082/vehicle-service/api/v1
+
+
+spring:
+  application:
+    name: vehicle-service
+
+
+

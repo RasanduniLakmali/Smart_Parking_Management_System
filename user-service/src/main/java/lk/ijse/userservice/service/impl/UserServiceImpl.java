@@ -1,72 +1,87 @@
 package lk.ijse.userservice.service.impl;
 
+import lk.ijse.userservice.dto.LoginDTO;
 import lk.ijse.userservice.dto.UserDTO;
 import lk.ijse.userservice.entity.User;
-import lk.ijse.userservice.repo.UserRepository;
+import lk.ijse.userservice.repo.UserRepo;
 import lk.ijse.userservice.service.UserService;
-import lk.ijse.userservice.util.VarList;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 
 @Service
 @Transactional
-public class UserServiceImpl implements UserDetailsService, UserService {
+public class UserServiceImpl implements UserService {
 
     @Autowired
-    private UserRepository userRepository;
+    private UserRepo userRepository;
 
     @Autowired
     private ModelMapper modelMapper;
+    @Autowired
+    private UserRepo userRepo;
 
     @Override
-    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        User user = userRepository.findByEmail(email);
-        return new org.springframework.security.core.userdetails.User(user.getEmail(), user.getPassword(), getAuthority(user));
+    public void registerUser(UserDTO userDTO) {
+        User user = modelMapper.map(userDTO, User.class);
+        userRepo.save(user);
+
     }
 
-    public UserDTO loadUserDetailsByUsername(String username) throws UsernameNotFoundException {
-        User user = userRepository.findByEmail(username);
+    @Override
+    public List<UserDTO> getAllUsers() {
+        List<User> users = userRepo.findAll();
+        return users.stream()
+                .map(user -> modelMapper.map(user,UserDTO.class))
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public UserDTO getByEmail(String email) {
+        User user = userRepo.findByEmail(email);
         return modelMapper.map(user,UserDTO.class);
     }
 
-    private Set<SimpleGrantedAuthority> getAuthority(User user) {
-        Set<SimpleGrantedAuthority> authorities = new HashSet<>();
-        authorities.add(new SimpleGrantedAuthority(user.getRole()));
-        return authorities;
+    @Override
+    public boolean updateUser(UserDTO userDTO) {
+        User user = userRepo.findByEmail(userDTO.getEmail());
+
+        System.out.println("optionalUser: " + user);
+
+        if (user != null) {
+
+            user.setUsername(userDTO.getUsername());
+            user.setEmail(userDTO.getEmail());
+            user.setPassword(userDTO.getPassword());
+            user.setFull_name(userDTO.getFull_name());
+            user.setPhone_number(userDTO.getPhone_number());
+            user.setAddress(userDTO.getAddress());
+            user.setRegistration_date(userDTO.getRegistration_date());
+            user.setRole(userDTO.getRole());
+            userRepo.save(user);
+            return true;
+        }
+        return false;
     }
 
     @Override
-    public UserDTO searchUser(String username) {
-        if (userRepository.existsByEmail(username)) {
-            User user=userRepository.findByEmail(username);
-            return modelMapper.map(user,UserDTO.class);
-        } else {
-            return null;
-        }
+    public LoginDTO loginUser(LoginDTO loginDTO) {
+          Optional<User> optionalUser = userRepo.findByUsername(loginDTO.getUsername());
+
+          if (optionalUser.isPresent()) {
+              User user = optionalUser.get();
+              if (user.getPassword().equals(loginDTO.getPassword())) {
+                  return loginDTO;
+              }
+          }
+         throw new RuntimeException("Invalid credentials!");
     }
-
-    @Override
-    public int saveUser(UserDTO userDTO) {
-        if (userRepository.existsByEmail(userDTO.getEmail())) {
-            return VarList.Not_Acceptable;
-        } else {
-            BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-            userDTO.setPassword(passwordEncoder.encode(userDTO.getPassword()));
-            userDTO.setRole("USER");
-            userRepository.save(modelMapper.map(userDTO, User.class));
-            return VarList.Created;
-        }
-    }}
-
+}

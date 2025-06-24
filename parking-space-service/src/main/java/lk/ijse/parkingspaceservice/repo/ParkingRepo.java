@@ -36,4 +36,6 @@ public interface ParkingRepo extends JpaRepository<Parking, Integer> {
     void setAvailable(@Param("spaceCode") String spaceCode);
 
 
+    @Query("SELECT  p from Parking p where p.space_code=:spaceCode")
+    Parking findBySpaceCode(@Param("spaceCode") String spaceCode);
 }

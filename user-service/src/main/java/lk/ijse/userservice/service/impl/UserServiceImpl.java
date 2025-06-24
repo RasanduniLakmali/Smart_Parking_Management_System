@@ -9,6 +9,7 @@ import lk.ijse.userservice.service.UserService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -31,8 +32,25 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void registerUser(UserDTO userDTO) {
-        User user = modelMapper.map(userDTO, User.class);
-        userRepo.save(user);
+        Optional<User> existingUser = userRepository.findByEmail(userDTO.getEmail());
+        if (existingUser.isPresent()) {
+            throw new RuntimeException("User already has account");
+        } else {
+            BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+            userDTO.setPassword(passwordEncoder.encode(userDTO.getPassword()));
+
+            User user = new User();
+            user.setUsername(userDTO.getUsername());
+            user.setEmail(userDTO.getEmail());
+            user.setPassword(userDTO.getPassword());
+            user.setFull_name(userDTO.getFull_name());
+            user.setPhone_number(userDTO.getPhone_number());
+            user.setAddress(userDTO.getAddress());
+            user.setRegistration_date(userDTO.getRegistration_date());
+            user.setRole(userDTO.getRole());
+            userRepository.save(user);
+
+        }
 
     }
 
@@ -46,13 +64,15 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDTO getByEmail(String email) {
-        User user = userRepo.findByEmail(email);
+        Optional<User> optionalUser = userRepo.findByEmail(email);
+        User user = optionalUser.get();
         return modelMapper.map(user,UserDTO.class);
     }
 
     @Override
     public boolean updateUser(UserDTO userDTO) {
-        User user = userRepo.findByEmail(userDTO.getEmail());
+        Optional<User> optionalUser = userRepo.findByEmail(userDTO.getEmail());
+        User user = optionalUser.get();
 
         System.out.println("optionalUser: " + user);
 
@@ -72,16 +92,15 @@ public class UserServiceImpl implements UserService {
         return false;
     }
 
-    @Override
-    public LoginDTO loginUser(LoginDTO loginDTO) {
-          Optional<User> optionalUser = userRepo.findByUsername(loginDTO.getUsername());
 
-          if (optionalUser.isPresent()) {
-              User user = optionalUser.get();
-              if (user.getPassword().equals(loginDTO.getPassword())) {
-                  return loginDTO;
-              }
-          }
-         throw new RuntimeException("Invalid credentials!");
+
+    @Override
+    public UserDTO getUserById(int userId) {
+        Optional<User> optionalUser = userRepo.findById(userId);
+        if (optionalUser.isPresent()) {
+            User user = optionalUser.get();
+            return modelMapper.map(user,UserDTO.class);
+        }
+        throw new RuntimeException("Invalid user Id!");
     }
 }

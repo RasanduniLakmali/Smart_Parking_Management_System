@@ -17,5 +17,7 @@ public interface UserService {
 
     boolean updateUser(UserDTO userDTO);
 
-    LoginDTO loginUser(LoginDTO loginDTO);
+
+
+    UserDTO getUserById(int userId);
 }

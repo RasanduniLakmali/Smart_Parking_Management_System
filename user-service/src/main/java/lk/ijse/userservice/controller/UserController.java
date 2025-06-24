@@ -3,10 +3,12 @@ package lk.ijse.userservice.controller;
 import jakarta.validation.Valid;
 
 
+import lk.ijse.userservice.dto.AuthResponseDTO;
 import lk.ijse.userservice.dto.LoginDTO;
 import lk.ijse.userservice.dto.UserDTO;
 import lk.ijse.userservice.service.UserService;
 
+import lk.ijse.userservice.util.JwtUtil;
 import lk.ijse.userservice.util.ResponseUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -24,35 +26,56 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-    @PostMapping("register")
-    public ResponseEntity<ResponseUtil> registerUser(@RequestBody UserDTO userDTO) {
-        System.out.println(userDTO);
+    @Autowired
+    private JwtUtil jwtUtil;
 
-        try{
-            userService.registerUser(userDTO);
-            return ResponseEntity.status(HttpStatus.OK)
-                    .body(new ResponseUtil(200, "User registration successful!",null));
-        }catch(Exception e){
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                    .body(new ResponseUtil(401, "Registration unsuccessful", null));
-        }
-
+    @PostMapping("/register")
+    public ResponseEntity<AuthResponseDTO> register(@RequestBody UserDTO userDTO) {
+        userService.registerUser(userDTO);
+        String token = jwtUtil.generateToken(userDTO.getEmail());
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(new AuthResponseDTO(userDTO.getEmail(), token));
     }
 
-    @PostMapping("login")
-    public ResponseEntity<ResponseUtil> loginUser(@RequestBody LoginDTO loginDTO) {
-        System.out.println(loginDTO);
-
-        try {
-            LoginDTO loginUser = userService.loginUser(loginDTO);
-            return ResponseEntity.status(HttpStatus.OK)
-                    .body(new ResponseUtil(200, "Login successful!", loginUser));
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                    .body(new ResponseUtil(401, "Login failed: Unauthorized", null));
+    @PostMapping("/login")
+    public ResponseEntity<?> login(@RequestHeader("Authorization") String authHeader) {
+        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Missing or invalid Authorization header");
         }
 
+        String token = authHeader.substring(7);
+
+        if (jwtUtil.validateToken(token)) {
+            String email = jwtUtil.extractUsername(token);
+            return ResponseEntity.ok("Login successful for: " + email);
+        } else {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid or expired token");
+        }
     }
+
+//    @PostMapping("register")
+//    public ResponseEntity<ResponseUtil> registerUser(@RequestBody UserDTO userDTO) {
+//        System.out.println(userDTO);
+//
+//        try{
+//            userService.registerUser(userDTO);
+//            return ResponseEntity.status(HttpStatus.OK)
+//                    .body(new ResponseUtil(200, "User registration successful!",null));
+//        }catch(Exception e){
+//            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+//                    .body(new ResponseUtil(401, "Registration unsuccessful", null));
+//        }
+//
+//    }
+//
+//    @PostMapping("login")
+//    public ResponseEntity<String> loginUser(@RequestBody LoginDTO loginDTO) {
+//        System.out.println(loginDTO);
+//
+//        String token = userService.loginUser(loginDTO);
+//        return ResponseEntity.ok(token);
+//
+//    }
     @GetMapping("getAll")
     public List<UserDTO> getAllUsers() {
         List<UserDTO> userDTOS = userService.getAllUsers();
@@ -76,5 +99,14 @@ public class UserController {
         }else {
             return new ResponseUtil(200, "User not updated!", null);
         }
+    }
+
+    @GetMapping("getById/{userId}")
+    public UserDTO getUserById(@PathVariable int userId) {
+        UserDTO userDTO = userService.getUserById(userId);
+        if (userDTO != null) {
+            return userDTO;
+        }
+        return null;
     }
 }

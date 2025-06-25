@@ -11,17 +11,11 @@ spring:
 
     gateway:
       routes:
-        - id: user-service-public
+        - id: user-service
           uri: http://localhost:8081
           # If using Eureka, this should be: uri: lb://PRODUCT-SERVICE
           predicates:
-            - Path=/user-service/api/v1/user/register,/user-service/api/v1/user/login
-
-        - id: user-service-protected
-          uri: http://localhost:8081
-          predicates:
             - Path=/user-service/**
-
 
         - id: vehicle-service
           uri: http://localhost:8082
@@ -41,10 +35,6 @@ spring:
 
 eureka:
       client:
-        service-url: # ❗Use `service-url`, not `serviceUrl`
+        service-url:
           defaultZone: http://localhost:8761/eureka/
 
-
-
-jwt:
-  secret: "2D4A614E645267556B58703273357638792F423F4428472B4B6250655368566DF423F4428472B4B6250655368566D"

@@ -1,6 +1,6 @@
 spring:
   application:
-    name: parking-service
+    name: payment-service
 
 
   config:

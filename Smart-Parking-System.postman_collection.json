@@ -1,0 +1,668 @@
+{
+	"info": {
+		"_postman_id": "ee7b00c7-283c-4d34-80e0-ffd5671770db",
+		"name": "Smart-Parking-System",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "40383196"
+	},
+	"item": [
+		{
+			"name": "Users",
+			"item": [
+				{
+					"name": "users-getAll",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8081/user-service/api/v1/user/getAll",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8081",
+							"path": [
+								"user-service",
+								"api",
+								"v1",
+								"user",
+								"getAll"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "users-save",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"username\": \"Nimali89\",\r\n    \"email\" : \"nimali@gmail.com\",\r\n    \"password\" : \"7890\",\r\n    \"full_name\" : \"Kamal Perera\",\r\n    \"phone_number\" : \"0768903562\",\r\n    \"address\" : \"Kandy\",\r\n    \"registration_date\" : \"2025-06-23\",\r\n    \"role\" : \"Driver\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8081/user-service/api/v1/user/register",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8081",
+							"path": [
+								"user-service",
+								"api",
+								"v1",
+								"user",
+								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "user-getByEmail",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8081/user-service/api/v1/user/getByEmail/amal@gmail.com",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8081",
+							"path": [
+								"user-service",
+								"api",
+								"v1",
+								"user",
+								"getByEmail",
+								"amal@gmail.com"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "users - update",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"username\": \"Ruwan29\",\r\n    \"email\" : \"ruwan@gmail.com\",\r\n    \"password\" : \"7904\",\r\n    \"full_name\" : \"Ruwan Shantha\",\r\n    \"phone_number\" : \"0773409456\",\r\n    \"address\" : \"Rathnapura\",\r\n    \"registration_date\" : \"2025-06-05\",\r\n    \"role\" : \"Driver\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8081/user-service/api/v1/user/update",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8081",
+							"path": [
+								"user-service",
+								"api",
+								"v1",
+								"user",
+								"update"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "user - login",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJuaW1hbGlAZ21haWwuY29tIiwiaWF0IjoxNzUwODQ3NjY0LCJleHAiOjE3NTA5MzQwNjR9.rcOmaL2CtNnbYZTFQWCAHYYy-UmjfxsJ-xFJVul1W-4",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\" : \"nimali@gmail.com\",\r\n    \"password\" : \"$2a$10$hcuJQaeRan7e7vAmOHUyYeAm14As5aOv.BXF2CYWl9b4E.WLx7n3G\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8081/user-service/api/v1/user/login",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8081",
+							"path": [
+								"user-service",
+								"api",
+								"v1",
+								"user",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "user - getById",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8081/user-service/api/v1/user/getById/1 ",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8081",
+							"path": [
+								"user-service",
+								"api",
+								"v1",
+								"user",
+								"getById",
+								"1 "
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Vehicles",
+			"item": [
+				{
+					"name": "vehicles-getAll",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8082/vehicle-service/api/v1/vehicle/getAll",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8082",
+							"path": [
+								"vehicle-service",
+								"api",
+								"v1",
+								"vehicle",
+								"getAll"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "vehicles -register",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"license_plate\": \"DER-7820\",\r\n  \"type\": \"CAR\",\r\n  \"model\": \"Toyota\",\r\n  \"color\": \"Blue\",\r\n  \"driver_id\": 4,\r\n  \"registration_date\" : \"2025-06-10\"\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8082/vehicle-service/api/v1/vehicle/register",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8082",
+							"path": [
+								"vehicle-service",
+								"api",
+								"v1",
+								"vehicle",
+								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "vehicles - update",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"license_plate\": \"ABC-1234\",\r\n  \"type\": \"CAR\",\r\n  \"model\": \"Prius\",\r\n  \"color\": \"Black\",\r\n  \"driver_id\": 1,\r\n  \"registration_date\" : \"2025-06-10\"\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8082/vehicle-service/api/v1/vehicle/update",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8082",
+							"path": [
+								"vehicle-service",
+								"api",
+								"v1",
+								"vehicle",
+								"update"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Parking Space",
+			"item": [
+				{
+					"name": "parking-save",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"space_code\" : \"PA-002\",\r\n    \"location\" : \"Main Street\",\r\n    \"city\" : \"Kandy\",\r\n    \"zone\" : \"Zone 1\",\r\n    \"description\" : \"near the clock tower\",\r\n    \"is_available\" : false,\r\n    \"owner_id\" : 2\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8083/parking-service/api/v1/parking/save",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8083",
+							"path": [
+								"parking-service",
+								"api",
+								"v1",
+								"parking",
+								"save"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "parking-update",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"space_code\" : \"PA-001\",\r\n    \"location\" : \"Main Street\",\r\n    \"city\" : \"Colombo\",\r\n    \"zone\" : \"Zone 1\",\r\n    \"description\" : \"10km away from bridge\",\r\n    \"is_available\" : false,\r\n    \"owner_id\" : 2\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8083/parking-service/api/v1/parking/update",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8083",
+							"path": [
+								"parking-service",
+								"api",
+								"v1",
+								"parking",
+								"update"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "parkings - getAll",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8083/parking-service/api/v1/parking/getAll",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8083",
+							"path": [
+								"parking-service",
+								"api",
+								"v1",
+								"parking",
+								"getAll"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "parking - available",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8083/parking-service/api/v1/parking/available/true",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8083",
+							"path": [
+								"parking-service",
+								"api",
+								"v1",
+								"parking",
+								"available",
+								"true"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "parking - filter by city",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8083/parking-service/api/v1/parking/filter/Colombo",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8083",
+							"path": [
+								"parking-service",
+								"api",
+								"v1",
+								"parking",
+								"filter",
+								"Colombo"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "parking - occupy",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8083/parking-service/api/v1/parking/occupy/PA-001",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8083",
+							"path": [
+								"parking-service",
+								"api",
+								"v1",
+								"parking",
+								"occupy",
+								"PA-001"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "parking - available",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8083/parking-service/api/v1/parking/available/PA-001",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8083",
+							"path": [
+								"parking-service",
+								"api",
+								"v1",
+								"parking",
+								"available",
+								"PA-001"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "parking - allowed",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"spaceCode\" : \"PA-001\",\r\n    \"licensePlate\" : \"DER-7820\",\r\n    \"userId\" : 4,\r\n    \"allowedDate\" : \"2025-06-10\",\r\n    \"entryTime\" : \"11:00:00\",\r\n    \"exitTime\" : \"12:00:00\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8083/parking-service/api/v1/parking/allow",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8083",
+							"path": [
+								"parking-service",
+								"api",
+								"v1",
+								"parking",
+								"allow"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "parking - updateExitTime",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "\r\n \"02:00:00\"\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8083/parking-service/api/v1/parking/update-exit-time/10",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8083",
+							"path": [
+								"parking-service",
+								"api",
+								"v1",
+								"parking",
+								"update-exit-time",
+								"10"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "parkingSession - start",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"parkingId\" : 12,\r\n    \"userId\" : 4\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8083/parking-service/api/v1/parking/start",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8083",
+							"path": [
+								"parking-service",
+								"api",
+								"v1",
+								"parking",
+								"start"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "parkingSession -finish",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8083/parking-service/api/v1/parking/finish/2",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8083",
+							"path": [
+								"parking-service",
+								"api",
+								"v1",
+								"parking",
+								"finish",
+								"2"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Payment",
+			"item": [
+				{
+					"name": "payment - savecard",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"driverId\" : 4,\r\n    \"mockCardNumber\" : \"1111-2222-3333-4444\",\r\n    \"mockHolderName\" : \"Dilmi Madhshani\",\r\n    \"mockExpiry\" : \"12/26\",\r\n    \"mockCvv\" : \"345\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8084/payment-service/api/v1/payment/saveCard",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8084",
+							"path": [
+								"payment-service",
+								"api",
+								"v1",
+								"payment",
+								"saveCard"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "payment - request",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"driverId\" : 4,\r\n    \"amount\" : 200,\r\n    \"method\" : \"CASH\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8084/payment-service/api/v1/payment/requestPay",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8084",
+							"path": [
+								"payment-service",
+								"api",
+								"v1",
+								"payment",
+								"requestPay"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}

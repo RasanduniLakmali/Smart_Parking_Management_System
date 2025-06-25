@@ -1,9 +1,6 @@
 package lk.ijse.userservice.controller;
 
-import jakarta.validation.Valid;
 
-
-import lk.ijse.userservice.dto.AuthResponseDTO;
 import lk.ijse.userservice.dto.LoginDTO;
 import lk.ijse.userservice.dto.UserDTO;
 import lk.ijse.userservice.service.UserService;
@@ -20,7 +17,7 @@ import java.util.Map;
 
 @RestController
 @CrossOrigin
-@RequestMapping("/api/v1/user")
+@RequestMapping("/user-service/api/v1/user")
 public class UserController {
 
     @Autowired
@@ -29,53 +26,30 @@ public class UserController {
     @Autowired
     private JwtUtil jwtUtil;
 
+
+
     @PostMapping("/register")
-    public ResponseEntity<AuthResponseDTO> register(@RequestBody UserDTO userDTO) {
+    public ResponseEntity<?> register(@RequestBody UserDTO userDTO) {
         userService.registerUser(userDTO);
         String token = jwtUtil.generateToken(userDTO.getEmail());
-        return ResponseEntity.status(HttpStatus.CREATED)
-                .body(new AuthResponseDTO(userDTO.getEmail(), token));
+        return ResponseEntity.ok(Map.of("token", token));
     }
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestHeader("Authorization") String authHeader) {
-        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Missing or invalid Authorization header");
-        }
-
-        String token = authHeader.substring(7);
-
-        if (jwtUtil.validateToken(token)) {
-            String email = jwtUtil.extractUsername(token);
-            return ResponseEntity.ok("Login successful for: " + email);
+    public ResponseEntity<ResponseUtil> login(@RequestBody LoginDTO loginDTO) {
+        boolean isLogged = userService.loginUser(loginDTO);
+        if (isLogged) {
+//            String token = jwtUtil.generateToken(loginDTO.getEmail());
+//            return ResponseEntity.ok(Map.of("token", token));
+            return ResponseEntity.status(HttpStatus.OK)
+                    .body(new ResponseUtil(201,"User login successfull!",null));
         } else {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid or expired token");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(new ResponseUtil(401,"Invalid credentials",null));
         }
     }
 
-//    @PostMapping("register")
-//    public ResponseEntity<ResponseUtil> registerUser(@RequestBody UserDTO userDTO) {
-//        System.out.println(userDTO);
-//
-//        try{
-//            userService.registerUser(userDTO);
-//            return ResponseEntity.status(HttpStatus.OK)
-//                    .body(new ResponseUtil(200, "User registration successful!",null));
-//        }catch(Exception e){
-//            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-//                    .body(new ResponseUtil(401, "Registration unsuccessful", null));
-//        }
-//
-//    }
-//
-//    @PostMapping("login")
-//    public ResponseEntity<String> loginUser(@RequestBody LoginDTO loginDTO) {
-//        System.out.println(loginDTO);
-//
-//        String token = userService.loginUser(loginDTO);
-//        return ResponseEntity.ok(token);
-//
-//    }
+
     @GetMapping("getAll")
     public List<UserDTO> getAllUsers() {
         List<UserDTO> userDTOS = userService.getAllUsers();

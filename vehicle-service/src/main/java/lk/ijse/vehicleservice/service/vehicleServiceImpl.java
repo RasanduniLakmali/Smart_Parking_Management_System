@@ -1,5 +1,7 @@
 package lk.ijse.vehicleservice.service;
 
+import lk.ijse.userservice.dto.UserDTO;
+import lk.ijse.vehicleservice.client.UserClient;
 import lk.ijse.vehicleservice.dto.VehicleDTO;
 import lk.ijse.vehicleservice.entity.Vehicle;
 import lk.ijse.vehicleservice.repo.VehicleRepo;
@@ -20,12 +22,23 @@ public class vehicleServiceImpl implements VehicleService{
     @Autowired
     private VehicleRepo vehicleRepo;
 
+    @Autowired
+    private UserClient userClient;
+
     @Override
     public boolean saveVehicle(VehicleDTO vehicleDTO) {
-       Vehicle vehicle =  modelMapper.map(vehicleDTO, Vehicle.class);
 
-       vehicleRepo.save(vehicle);
-       return true;
+        UserDTO userDTO =  userClient.isUserExists(vehicleDTO.getDriver_id());
+
+        System.out.println("user received " + userDTO);
+
+        if (userDTO != null) {
+            Vehicle vehicle =  modelMapper.map(vehicleDTO, Vehicle.class);
+
+            vehicleRepo.save(vehicle);
+            return true;
+        }
+        return false;
     }
 
     @Override

@@ -1,4 +1,4 @@
-package lk.ijse.paymentservice.service;
+package lk.ijse.paymentservice.service.impl;
 
 import lk.ijse.parkingspaceservice.dto.ParkingSessionDTO;
 import lk.ijse.paymentservice.client.ParkingSessionClient;
@@ -13,13 +13,15 @@ import lk.ijse.paymentservice.entity.Receipt;
 import lk.ijse.paymentservice.repo.CardDetailsRepo;
 import lk.ijse.paymentservice.repo.PaymentRepo;
 import lk.ijse.paymentservice.repo.ReceiptDetailRepo;
+import lk.ijse.paymentservice.service.PaymentService;
 import lk.ijse.userservice.dto.UserDTO;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.reactive.function.client.WebClient;
 
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class PaymentServiceImpl implements PaymentService {
@@ -129,5 +131,13 @@ public class PaymentServiceImpl implements PaymentService {
         dto.setIssuedTime(receipt.getIssuedTime());
 
         return dto;
+    }
+
+    @Override
+    public List<PaymentDTO> getAllPayments() {
+        List<Payment> payments = paymentRepo.findAll();
+        return payments.stream()
+                .map(payment -> modelMapper.map(payment, PaymentDTO.class))
+                .collect(Collectors.toList());
     }
 }

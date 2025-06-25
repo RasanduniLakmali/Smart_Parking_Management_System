@@ -20,4 +20,6 @@ public interface UserService {
 
 
     UserDTO getUserById(int userId);
+
+    boolean loginUser(LoginDTO loginDTO);
 }

@@ -16,32 +16,36 @@ import java.util.List;
 
 @RestController
 @CrossOrigin
-@RequestMapping("/api/v1/parking")
+@RequestMapping("/parking-service/api/v1/parking")
 public class ParkingController {
 
     @Autowired
     ParkingService parkingService;
 
     @PostMapping("save")
-    public ResponseUtil saveParkingSpace(@RequestBody ParkingDTO parkingDTO) {
+    public ResponseEntity<ResponseUtil> saveParkingSpace(@RequestBody ParkingDTO parkingDTO) {
         boolean isSaved = parkingService.saveParking(parkingDTO);
 
         if (isSaved) {
-            return new ResponseUtil(201, "Parking saved successfully!", null);
+            return ResponseEntity.status(HttpStatus.OK)
+                    .body(new ResponseUtil(200,"Parking space saved successfully!",null));
         } else {
-            return new ResponseUtil(200, "Parking not saved!", null);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(new ResponseUtil(400,"Parking space save failed!",null));
         }
 
     }
 
     @PutMapping("update")
-    public ResponseUtil updateParkingSpace(@RequestBody ParkingDTO parkingDTO) {
+    public ResponseEntity<ResponseUtil> updateParkingSpace(@RequestBody ParkingDTO parkingDTO) {
         boolean isUpdated = parkingService.updateParking(parkingDTO);
 
         if (isUpdated) {
-            return new ResponseUtil(200, "Parking updated successfully!", null);
+            return ResponseEntity.status(HttpStatus.OK)
+                      .body(new ResponseUtil(200, "Parking updated successfully!", null));
         }else {
-            return new ResponseUtil(200, "Parking not updated!", null);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(new ResponseUtil(200, "Parking not updated!", null));
         }
     }
 
@@ -83,27 +87,19 @@ public class ParkingController {
 
 
     @PutMapping("available/{spaceCode}")
-    public ResponseUtil markSpaceAvailable(@PathVariable String spaceCode){
+    public ResponseEntity<ResponseUtil> markSpaceAvailable(@PathVariable String spaceCode){
         System.out.println(spaceCode);
+
         boolean isAvailable = parkingService.markAvailable(spaceCode);
+
         if(isAvailable){
-            return new ResponseUtil(201, "Space set available successfully!!", null);
+            return ResponseEntity.status(HttpStatus.OK)
+                       .body(new ResponseUtil(201, "Space set available successfully!!", null));
         }else {
-            return new ResponseUtil(200, "Space not available!", null);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                       .body(new ResponseUtil(200, "Space not available!", null));
         }
     }
-
-
-//    @DeleteMapping("delete/{parkingId}")
-//    public ResponseUtil deleteParkingSpace(@PathVariable int parkingId){
-//       boolean isDeleted = parkingService.deleteSpace(parkingId);
-//
-//       if (isDeleted){
-//           return new ResponseUtil(201, "Space deleted successfully!!", null);
-//       }else {
-//           return new ResponseUtil(200, "Space not deleted!", null);
-//       }
-//    }
 
 
     @PostMapping("/allow")

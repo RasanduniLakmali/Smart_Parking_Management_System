@@ -10,6 +10,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -27,8 +28,12 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private ModelMapper modelMapper;
+
     @Autowired
     private UserRepo userRepo;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @Override
     public void registerUser(UserDTO userDTO) {
@@ -103,4 +108,29 @@ public class UserServiceImpl implements UserService {
         }
         throw new RuntimeException("Invalid user Id!");
     }
+
+//    @Override
+//    public boolean loginUser(LoginDTO loginDTO) {
+//        Optional<User> optionalUser = userRepository.findByEmail(loginDTO.getEmail());
+//
+//        if (optionalUser.isPresent()) {
+//            User user = optionalUser.get();
+//            // Check password using BCrypt
+//            return passwordEncoder.matches(loginDTO.getPassword(), user.getPassword());
+//        }
+//
+//        return false;
+//    }
+
+
+    @Override
+    public boolean loginUser(LoginDTO loginDTO) {
+        Optional<User> optionalUser = userRepo.findByEmail(loginDTO.getEmail());
+        User user = optionalUser.get();
+        if (user != null && user.getPassword().equals(loginDTO.getPassword())) {
+            return true;
+        }
+        return false;
+    }
+
 }

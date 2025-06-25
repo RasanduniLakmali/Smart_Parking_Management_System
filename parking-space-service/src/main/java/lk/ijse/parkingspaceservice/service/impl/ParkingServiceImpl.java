@@ -1,4 +1,4 @@
-package lk.ijse.parkingspaceservice.service;
+package lk.ijse.parkingspaceservice.service.impl;
 
 
 import lk.ijse.parkingspaceservice.dto.AllowParkingDTO;
@@ -11,6 +11,7 @@ import lk.ijse.parkingspaceservice.entity.ParkingSession;
 import lk.ijse.parkingspaceservice.repo.AllowParkingRepo;
 import lk.ijse.parkingspaceservice.repo.ParkingRepo;
 import lk.ijse.parkingspaceservice.repo.ParkingSessionRepo;
+import lk.ijse.parkingspaceservice.service.ParkingService;
 import lk.ijse.userservice.dto.UserDTO;
 import lk.ijse.vehicleservice.dto.VehicleDTO;
 import org.modelmapper.ModelMapper;
@@ -19,7 +20,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
 import java.time.Duration;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
@@ -256,21 +256,14 @@ public class ParkingServiceImpl implements ParkingService {
         Duration duration = Duration.between(entryTime, exitTime);
         long minutes = duration.toMinutes();
 
-        // Convert minutes to decimal hours
+
         double hours = minutes / 60.0;
 
-        // Charge by rounding up to the next full hour (if you want)
+
         double fee = Math.ceil(hours) * ratePerHour;
 
         return fee;
     }
 }
-
-
-//    @Override
-//    public boolean deleteSpace(int parkingId) {
-//         parkingRepo.deleteByParking_id(parkingId);
-//         return true;
-//    }
 
 
